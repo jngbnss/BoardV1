@@ -2,20 +2,31 @@ package jngbnss.board.service;
 
 import jngbnss.board.domain.Board;
 import jngbnss.board.dto.BoardDto;
+import jngbnss.board.dto.BoardResponseDto;
 import jngbnss.board.exception.BusinessLogicException;
 import jngbnss.board.exception.ExceptionCode;
 import jngbnss.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+
+    public Page<BoardResponseDto> findAllBoards(Pageable pageable) {
+        Page<Board> boards = boardRepository.findAll(pageable);
+        return boards.map(BoardResponseDto::FindFromBoard);
+    }
+
+
+        public BoardResponseDto findByBoardId(Long boardId){
+        Board board = findBoardId(boardId);
+        return BoardResponseDto.FindFromBoard(board);
+    }
 
     public void deleteBoard(Long boardId){
         findBoardId(boardId);
