@@ -8,10 +8,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Getter@Setter
 @RestController // json으로 만들어주는 기특한 녀석
@@ -19,6 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
+    @DeleteMapping("/{boardId}")
+    public ResponseEntity<Long>  deleteBoard(@PathVariable("boardId")Long boardId){
+        boardService.deleteBoard(boardId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{boardId}")
+    public ResponseEntity<Long> patchBoard(@PathVariable("boardId")Long boardId,
+                                           @RequestBody @Validated BoardDto boardDto){
+        boardService.updateBoard(boardDto,boardId);
+        return ResponseEntity.status(HttpStatus.OK).body(boardId);
+    }
+
+    // 근데 모델로 받아서 그런거아냐? 모데롤 안받고싶은데
 
     @PostMapping
     public ResponseEntity<Long> postBoard(@RequestBody @Validated BoardDto boardDto){
