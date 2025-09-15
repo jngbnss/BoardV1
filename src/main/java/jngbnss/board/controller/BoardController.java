@@ -1,5 +1,6 @@
 package jngbnss.board.controller;
 
+import jngbnss.board.domain.Board;
 import jngbnss.board.dto.BoardDto;
 import jngbnss.board.dto.BoardResponseDto;
 import jngbnss.board.service.BoardService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
 
     @GetMapping
     public ResponseEntity<Page<BoardResponseDto>> getAllBoards(
@@ -54,9 +56,10 @@ public class BoardController {
     // 근데 모델로 받아서 그런거아냐? 모데롤 안받고싶은데
 
     @PostMapping
-    public ResponseEntity<Long> postBoard(@RequestBody @Validated BoardDto boardDto){
-        Long boardId = boardService.createBoard(boardDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(boardId);
+    public ResponseEntity<BoardResponseDto> postBoard(@RequestBody @Validated BoardDto boardDto){
+        Board savedBoard = boardService.createBoard(boardDto);
+        BoardResponseDto boardResponseDto = BoardResponseDto.from(savedBoard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(boardResponseDto);
     }
 
 

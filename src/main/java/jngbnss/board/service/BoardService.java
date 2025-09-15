@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardService {
     private final BoardRepository boardRepository;
 
+
+
     public Page<BoardResponseDto> findAllBoards(Pageable pageable) {
         Page<Board> boards = boardRepository.findAll(pageable);
         return boards.map(BoardResponseDto::FindFromBoard);
@@ -49,8 +51,8 @@ public class BoardService {
     }
 
     // 크리에트 보드
-    public Long createBoard(BoardDto boardDto){
+    public Board createBoard(BoardDto boardDto){
         Board board = new Board(boardDto.getTitle(), boardDto.getContent());
-        return boardRepository.save(board).getId();
+        return boardRepository.save(board);
     }
 }
